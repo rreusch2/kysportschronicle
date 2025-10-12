@@ -158,7 +158,7 @@ const ArticleEditor = () => {
   ]
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
       {/* Image Cropper Modal */}
       {cropperImage && (
         <ImageCropper
@@ -170,106 +170,147 @@ const ArticleEditor = () => {
       )}
 
       {/* Header */}
-      <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-10">
-        <div className="max-w-7xl mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
+      <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-20 backdrop-blur-sm bg-white/95">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            {/* Left side */}
+            <div className="flex items-center gap-3 md:gap-4">
               <button
                 onClick={() => navigate('/admin/dashboard')}
-                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                className="p-2 hover:bg-gray-100 rounded-lg transition-colors flex-shrink-0"
+                title="Back to Dashboard"
               >
                 <ArrowLeft size={24} />
               </button>
               <div>
-                <h1 className="text-2xl font-bold text-gray-900">
-                  {isNew ? 'New Article' : 'Edit Article'}
+                <h1 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-uk-blue to-uk-blue-light bg-clip-text text-transparent">
+                  {isNew ? '✨ New Article' : '📝 Edit Article'}
                 </h1>
-                <p className="text-sm text-gray-600">
-                  {formData.is_published ? 'Published' : 'Draft'}
-                </p>
+                <div className="flex items-center gap-2 mt-1">
+                  <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold ${
+                    formData.is_published 
+                      ? 'bg-green-100 text-green-700' 
+                      : 'bg-orange-100 text-orange-700'
+                  }`}>
+                    {formData.is_published ? '● Live' : '○ Draft'}
+                  </span>
+                  {formData.is_featured && (
+                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-yellow-100 text-yellow-700">
+                      <Star size={12} className="fill-current" />
+                      Featured
+                    </span>
+                  )}
+                </div>
               </div>
             </div>
 
-            <div className="flex items-center gap-3">
+            {/* Right side - Actions */}
+            <div className="flex items-center gap-2 md:gap-3">
               {showSuccess && (
                 <div className="flex items-center gap-2 text-green-600 animate-fade-in">
                   <CheckCircle size={20} />
-                  <span className="font-semibold">Saved!</span>
+                  <span className="font-semibold hidden sm:inline">Saved!</span>
                 </div>
               )}
               
               <button
                 onClick={() => handleSave(false)}
                 disabled={saving}
-                className="flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg font-semibold transition-colors disabled:opacity-50"
+                className="flex items-center gap-2 px-4 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-semibold transition-all disabled:opacity-50 text-sm md:text-base"
               >
                 <Save size={18} />
-                {saving ? 'Saving...' : 'Save Draft'}
+                <span className="hidden sm:inline">{saving ? 'Saving...' : 'Save Draft'}</span>
+                <span className="sm:hidden">Save</span>
               </button>
 
               <button
                 onClick={() => handleSave(true)}
                 disabled={saving}
-                className="flex items-center gap-2 px-4 py-2 gradient-blue text-white rounded-lg font-semibold hover:shadow-lg transition-all disabled:opacity-50"
+                className="flex items-center gap-2 px-4 py-2.5 gradient-blue text-white rounded-xl font-semibold hover:shadow-lg transition-all disabled:opacity-50 text-sm md:text-base"
               >
                 <Eye size={18} />
-                {formData.is_published ? 'Update' : 'Publish'}
+                <span className="hidden sm:inline">{formData.is_published ? 'Update' : 'Publish'}</span>
+                <span className="sm:hidden">{formData.is_published ? 'Update' : 'Publish'}</span>
               </button>
             </div>
           </div>
         </div>
       </header>
 
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
           {/* Main Editor */}
           <div className="lg:col-span-2 space-y-6">
             {/* Title */}
-            <div>
+            <div className="bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-gray-100 animate-fade-in">
               <input
                 type="text"
-                placeholder="Article Title"
+                placeholder="Your article title here..."
                 value={formData.title}
                 onChange={(e) => setFormData({ 
                   ...formData, 
                   title: e.target.value,
                   slug: '' // Reset slug to regenerate
                 })}
-                className="w-full text-4xl font-bold border-none focus:outline-none placeholder-gray-300"
+                className="w-full text-3xl md:text-4xl font-bold border-none focus:outline-none placeholder-gray-300 bg-transparent"
               />
+              <div className="mt-3 pt-3 border-t border-gray-100 text-sm text-gray-500">
+                💡 <span className="font-medium">Tip:</span> Make it catchy and engaging
+              </div>
             </div>
 
             {/* Excerpt */}
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Excerpt (appears in article cards)
+            <div className="bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-gray-100 animate-slide-up" style={{ animationDelay: '100ms' }}>
+              <label className="block text-sm font-bold text-gray-900 mb-3 flex items-center gap-2">
+                <span className="text-lg">📋</span>
+                Excerpt
+                <span className="ml-auto text-xs font-normal text-gray-500">Appears in preview cards</span>
               </label>
               <textarea
-                placeholder="Brief summary of the article..."
+                placeholder="Write a compelling summary that makes readers want to click..."
                 value={formData.excerpt || ''}
                 onChange={(e) => setFormData({ ...formData, excerpt: e.target.value })}
                 rows={3}
-                className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-uk-blue focus:outline-none"
+                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-uk-blue focus:outline-none resize-none transition-colors"
               />
+              <div className="mt-2 text-xs text-gray-500">
+                {formData.excerpt?.length || 0} characters • Recommended: 120-160
+              </div>
             </div>
 
             {/* Content Editor */}
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
+            <div className="bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-gray-100 animate-slide-up" style={{ animationDelay: '200ms' }}>
+              <label className="block text-sm font-bold text-gray-900 mb-4 flex items-center gap-2">
+                <span className="text-lg">✍️</span>
                 Article Content
+                <span className="ml-auto text-xs font-normal text-gray-500">
+                  {calculateReadTime(formData.content)} min read
+                </span>
               </label>
               <RichTextEditor
                 content={formData.content}
                 onChange={(content) => setFormData({ ...formData, content })}
               />
+              <div className="mt-4 p-4 bg-blue-50 rounded-xl border border-blue-100">
+                <p className="text-sm text-blue-900 font-medium mb-2">📝 Editor Tips:</p>
+                <ul className="text-xs text-blue-800 space-y-1 ml-4 list-disc">
+                  <li>Use <strong>bullet points</strong> and <strong>numbered lists</strong> for clarity</li>
+                  <li>Break up text with <strong>headings</strong> (H1, H2)</li>
+                  <li>Add <strong>images</strong> to make content more engaging</li>
+                  <li><strong>Bold</strong> key points and <em>italicize</em> for emphasis</li>
+                </ul>
+              </div>
             </div>
           </div>
 
           {/* Sidebar */}
           <div className="space-y-6">
             {/* Thumbnail */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-              <h3 className="text-lg font-bold text-gray-900 mb-4">Featured Image</h3>
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 animate-slide-up" style={{ animationDelay: '300ms' }}>
+              <h3 className="text-sm font-bold text-gray-900 mb-4 flex items-center gap-2">
+                <span className="text-lg">🖼️</span>
+                Featured Image
+              </h3>
               
               {formData.thumbnail_url ? (
                 <div className="relative group">
@@ -326,18 +367,21 @@ const ArticleEditor = () => {
             </div>
 
             {/* Settings */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-              <h3 className="text-lg font-bold text-gray-900 mb-4">Settings</h3>
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 animate-slide-up" style={{ animationDelay: '400ms' }}>
+              <h3 className="text-sm font-bold text-gray-900 mb-4 flex items-center gap-2">
+                <span className="text-lg">⚙️</span>
+                Article Settings
+              </h3>
               
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    Category
+                  <label className="block text-xs font-bold text-gray-700 mb-2 uppercase tracking-wide">
+                    📁 Category
                   </label>
                   <select
                     value={formData.category}
                     onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                    className="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:border-uk-blue focus:outline-none"
+                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-uk-blue focus:outline-none transition-colors font-medium"
                   >
                     {categories.map(cat => (
                       <option key={cat} value={cat}>{cat}</option>
@@ -346,45 +390,45 @@ const ArticleEditor = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    Author Name
+                  <label className="block text-xs font-bold text-gray-700 mb-2 uppercase tracking-wide">
+                    ✏️ Author Name
                   </label>
                   <input
                     type="text"
                     value={formData.author_name || ''}
                     onChange={(e) => setFormData({ ...formData, author_name: e.target.value })}
                     placeholder="Kentucky Sports Chronicle"
-                    className="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:border-uk-blue focus:outline-none"
+                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-uk-blue focus:outline-none transition-colors font-medium"
                   />
                 </div>
 
-                <div className="flex items-center gap-3 p-4 bg-yellow-50 rounded-lg border border-yellow-200">
+                <div className="flex items-center gap-3 p-4 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-xl border-2 border-yellow-200 hover:border-yellow-300 transition-colors cursor-pointer group">
                   <input
                     type="checkbox"
                     id="featured"
                     checked={formData.is_featured}
                     onChange={(e) => setFormData({ ...formData, is_featured: e.target.checked })}
-                    className="w-5 h-5 text-uk-blue focus:ring-uk-blue rounded"
+                    className="w-5 h-5 text-uk-blue focus:ring-uk-blue rounded cursor-pointer"
                   />
-                  <label htmlFor="featured" className="flex items-center gap-2 font-semibold text-gray-900 cursor-pointer">
-                    <Star size={18} className="text-yellow-600" />
-                    Feature this article
+                  <label htmlFor="featured" className="flex items-center gap-2 font-bold text-gray-900 cursor-pointer flex-1">
+                    <Star size={18} className={`${formData.is_featured ? 'text-yellow-600 fill-current' : 'text-yellow-600'} group-hover:scale-110 transition-transform`} />
+                    <span>Feature this article</span>
                   </label>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    URL Slug
+                  <label className="block text-xs font-bold text-gray-700 mb-2 uppercase tracking-wide">
+                    🔗 URL Slug
                   </label>
                   <input
                     type="text"
                     value={formData.slug}
                     onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
                     placeholder="auto-generated-from-title"
-                    className="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:border-uk-blue focus:outline-none text-sm font-mono"
+                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-uk-blue focus:outline-none text-sm font-mono transition-colors"
                   />
-                  <p className="text-xs text-gray-500 mt-1">
-                    Leave empty to auto-generate
+                  <p className="text-xs text-gray-500 mt-2 flex items-center gap-1">
+                    <span>💡</span> Leave empty to auto-generate
                   </p>
                 </div>
               </div>

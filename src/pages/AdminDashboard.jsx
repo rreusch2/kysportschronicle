@@ -284,27 +284,27 @@ const AdminDashboard = () => {
           </div>
         </div>
 
-        {/* Actions Bar */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-8">
-          <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
-            <div className="flex-1 w-full md:w-auto">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
-                <input
-                  type="text"
-                  placeholder="Search articles..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 border-2 border-gray-200 rounded-lg focus:border-uk-blue focus:outline-none"
-                />
-              </div>
+        {/* Search & Filter Bar */}
+        <div className="bg-white rounded-xl md:rounded-2xl shadow-sm border border-gray-100 p-4 md:p-6 mb-6 md:mb-8 animate-slide-up" style={{ animationDelay: '400ms' }}>
+          <div className="flex flex-col gap-4">
+            {/* Search Bar */}
+            <div className="relative">
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+              <input
+                type="text"
+                placeholder="Search articles by title or content..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-12 pr-4 py-3 md:py-4 border-2 border-gray-200 rounded-xl focus:border-uk-blue focus:outline-none transition-colors text-sm md:text-base"
+              />
             </div>
 
-            <div className="flex gap-3 flex-wrap">
+            {/* Filter & Actions */}
+            <div className="flex flex-col sm:flex-row gap-3 justify-between">
               <select
                 value={filterCategory}
                 onChange={(e) => setFilterCategory(e.target.value)}
-                className="px-4 py-2 border-2 border-gray-200 rounded-lg focus:border-uk-blue focus:outline-none font-semibold"
+                className="px-4 py-2.5 md:py-3 border-2 border-gray-200 rounded-xl focus:border-uk-blue focus:outline-none font-semibold text-sm md:text-base bg-white"
               >
                 {categories.map(cat => (
                   <option key={cat} value={cat}>{cat}</option>
@@ -313,74 +313,135 @@ const AdminDashboard = () => {
 
               <button
                 onClick={() => navigate('/admin/article/new')}
-                className="gradient-blue text-white px-6 py-2 rounded-lg font-semibold hover:shadow-lg transition-all flex items-center gap-2"
+                className="gradient-blue text-white px-6 py-2.5 md:py-3 rounded-xl font-semibold hover:shadow-lg transition-all flex items-center justify-center gap-2 text-sm md:text-base"
               >
                 <PlusCircle size={20} />
-                New Article
+                <span className="hidden sm:inline">New Article</span>
+                <span className="sm:hidden">Create</span>
               </button>
             </div>
           </div>
+
+          {/* Results Count */}
+          {searchTerm && (
+            <div className="mt-4 pt-4 border-t border-gray-100">
+              <p className="text-sm text-gray-600">
+                Found <span className="font-bold text-uk-blue">{filteredArticles.length}</span> article{filteredArticles.length !== 1 ? 's' : ''}
+              </p>
+            </div>
+          )}
         </div>
 
         {/* Articles List */}
         {loading ? (
-          <div className="text-center py-12">
+          <div className="text-center py-16">
             <div className="w-16 h-16 border-4 border-uk-blue border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-            <p className="text-gray-600">Loading articles...</p>
+            <p className="text-gray-600 font-medium">Loading your content...</p>
           </div>
         ) : filteredArticles.length === 0 ? (
-          <div className="bg-white rounded-xl p-12 text-center shadow-sm border border-gray-100">
-            <p className="text-gray-600 text-lg">No articles found</p>
-            <button
-              onClick={() => navigate('/admin/article/new')}
-              className="mt-4 gradient-blue text-white px-6 py-3 rounded-lg font-semibold hover:shadow-lg transition-all inline-flex items-center gap-2"
-            >
-              <PlusCircle size={20} />
-              Create Your First Article
-            </button>
+          <div className="bg-gradient-to-br from-white to-gray-50 rounded-2xl p-12 md:p-16 text-center shadow-sm border border-gray-100 animate-fade-in">
+            <div className="w-20 h-20 bg-uk-blue/10 rounded-full flex items-center justify-center mx-auto mb-6">
+              <FileText className="text-uk-blue" size={40} />
+            </div>
+            <h3 className="text-2xl font-bold text-gray-900 mb-3">
+              {searchTerm ? 'No results found' : 'No articles yet'}
+            </h3>
+            <p className="text-gray-600 mb-6 max-w-md mx-auto">
+              {searchTerm 
+                ? 'Try adjusting your search or filter'
+                : 'Start creating amazing content for your readers'
+              }
+            </p>
+            {!searchTerm && (
+              <button
+                onClick={() => navigate('/admin/article/new')}
+                className="gradient-blue text-white px-8 py-4 rounded-xl font-bold hover:shadow-lg transition-all inline-flex items-center gap-2 hover:scale-105"
+              >
+                <PlusCircle size={22} />
+                Create Your First Article
+              </button>
+            )}
           </div>
         ) : (
-          <div className="space-y-4">
-            {filteredArticles.map((article) => (
+          <div className="space-y-4 md:space-y-6">
+            {filteredArticles.map((article, index) => (
               <div
                 key={article.id}
-                className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-shadow"
+                className="bg-white rounded-xl md:rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-lg transition-all group animate-slide-up"
+                style={{ animationDelay: `${(index % 5) * 50}ms` }}
               >
-                <div className="flex items-start justify-between gap-4">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-2">
-                      <h3 className="text-xl font-bold text-gray-900">{article.title}</h3>
+                <div className="flex flex-col sm:flex-row gap-4 p-4 md:p-6">
+                  {/* Thumbnail */}
+                  {article.thumbnail_url && (
+                    <div className="sm:w-48 sm:flex-shrink-0">
+                      <img 
+                        src={article.thumbnail_url} 
+                        alt={article.title}
+                        className="w-full h-40 sm:h-32 object-cover rounded-lg"
+                      />
+                    </div>
+                  )}
+                  
+                  {/* Content */}
+                  <div className="flex-1 min-w-0">
+                    {/* Title & Badges */}
+                    <div className="flex flex-wrap items-start gap-2 mb-3">
+                      <h3 className="text-lg md:text-xl font-bold text-gray-900 group-hover:text-uk-blue transition-colors flex-1 min-w-0">
+                        {article.title}
+                      </h3>
                       {article.is_featured && (
-                        <Star className="text-yellow-500 fill-current" size={20} />
+                        <Star className="text-yellow-500 fill-current flex-shrink-0" size={18} />
                       )}
-                      <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                    </div>
+                    
+                    {/* Badges Row */}
+                    <div className="flex flex-wrap items-center gap-2 mb-3">
+                      <span className={`px-3 py-1 rounded-full text-xs font-bold ${
                         article.is_published 
                           ? 'bg-green-100 text-green-700' 
                           : 'bg-orange-100 text-orange-700'
                       }`}>
-                        {article.is_published ? 'Published' : 'Draft'}
+                        {article.is_published ? '● Live' : '○ Draft'}
                       </span>
-                      <span className="px-3 py-1 bg-uk-blue/10 text-uk-blue rounded-full text-xs font-semibold">
+                      <span className="px-3 py-1 bg-uk-blue/10 text-uk-blue rounded-full text-xs font-bold">
                         {article.category}
                       </span>
                     </div>
-                    <p className="text-gray-600 mb-3 line-clamp-2">{article.excerpt}</p>
-                    <div className="flex items-center gap-4 text-sm text-gray-500">
-                      <span className="flex items-center gap-1">
-                        <Calendar size={14} />
-                        {format(new Date(article.created_at), 'MMM d, yyyy')}
+                    
+                    {/* Excerpt */}
+                    <p className="text-sm md:text-base text-gray-600 mb-3 line-clamp-2 leading-relaxed">
+                      {article.excerpt}
+                    </p>
+                    
+                    {/* Meta Info */}
+                    <div className="flex flex-wrap items-center gap-3 md:gap-4 text-xs md:text-sm text-gray-500">
+                      <span className="flex items-center gap-1.5">
+                        <Calendar size={14} className="flex-shrink-0" />
+                        <span className="hidden sm:inline">
+                          {format(new Date(article.created_at), 'MMM d, yyyy')}
+                        </span>
+                        <span className="sm:hidden">
+                          {format(new Date(article.created_at), 'MMM d')}
+                        </span>
                       </span>
-                      <span>•</span>
-                      <span>{article.read_time} min read</span>
-                      <span>•</span>
-                      <span>{article.views || 0} views</span>
+                      <span className="hidden sm:inline">•</span>
+                      <span className="flex items-center gap-1.5">
+                        <Clock size={14} className="flex-shrink-0" />
+                        {article.read_time} min
+                      </span>
+                      <span className="hidden sm:inline">•</span>
+                      <span className="flex items-center gap-1.5">
+                        <Eye size={14} className="flex-shrink-0" />
+                        {(article.views || 0).toLocaleString()}
+                      </span>
                     </div>
                   </div>
 
-                  <div className="flex gap-2">
+                  {/* Actions - Desktop */}
+                  <div className="hidden sm:flex flex-col gap-2 flex-shrink-0">
                     <button
                       onClick={() => togglePublish(article)}
-                      className={`p-2 rounded-lg transition-colors ${
+                      className={`p-2.5 rounded-lg transition-all ${
                         article.is_published
                           ? 'bg-orange-100 text-orange-600 hover:bg-orange-200'
                           : 'bg-green-100 text-green-600 hover:bg-green-200'
@@ -391,19 +452,48 @@ const AdminDashboard = () => {
                     </button>
                     <button
                       onClick={() => navigate(`/admin/article/${article.id}`)}
-                      className="p-2 bg-uk-blue/10 text-uk-blue rounded-lg hover:bg-uk-blue/20 transition-colors"
+                      className="p-2.5 bg-uk-blue/10 text-uk-blue rounded-lg hover:bg-uk-blue/20 transition-all"
                       title="Edit"
                     >
                       <Edit size={20} />
                     </button>
                     <button
                       onClick={() => handleDelete(article.id, article.title)}
-                      className="p-2 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 transition-colors"
+                      className="p-2.5 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 transition-all"
                       title="Delete"
                     >
                       <Trash2 size={20} />
                     </button>
                   </div>
+                </div>
+
+                {/* Actions - Mobile */}
+                <div className="sm:hidden flex items-center gap-2 px-4 pb-4 border-t border-gray-100 pt-3">
+                  <button
+                    onClick={() => togglePublish(article)}
+                    className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg transition-all font-semibold text-sm ${
+                      article.is_published
+                        ? 'bg-orange-100 text-orange-600'
+                        : 'bg-green-100 text-green-600'
+                    }`}
+                  >
+                    {article.is_published ? <EyeOff size={18} /> : <Eye size={18} />}
+                    <span>{article.is_published ? 'Unpublish' : 'Publish'}</span>
+                  </button>
+                  <button
+                    onClick={() => navigate(`/admin/article/${article.id}`)}
+                    className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 gradient-blue text-white rounded-lg font-semibold text-sm"
+                  >
+                    <Edit size={18} />
+                    <span>Edit</span>
+                  </button>
+                  <button
+                    onClick={() => handleDelete(article.id, article.title)}
+                    className="p-2.5 bg-red-100 text-red-600 rounded-lg"
+                    title="Delete"
+                  >
+                    <Trash2 size={20} />
+                  </button>
                 </div>
               </div>
             ))}
