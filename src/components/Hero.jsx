@@ -3,52 +3,67 @@ import { ArrowRight, Trophy, TrendingUp, Users } from 'lucide-react'
 const Hero = ({ scrollToSection }) => {
   return (
     <div className="relative min-h-screen flex items-center overflow-hidden bg-gradient-to-b from-gray-100 to-white">
-      {/* Background Image - Add your UK Sports graphic here! */}
+      {/* Background Image */}
       <div 
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-opacity duration-300" 
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat" 
         style={{ 
           backgroundImage: 'url(/hero-background.jpg)',
-          backgroundAttachment: 'scroll' // Change to 'fixed' for parallax effect
+          backgroundAttachment: 'scroll'
         }}
       >
-        {/* Dark overlay for text readability - Adjust opacity if needed */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-white/95" />
-        {/* UK Blue tint overlay - Remove this line if image has enough blue */}
-        <div className="absolute inset-0 bg-uk-blue/5" />
+        {/* Stronger dark overlay for better text contrast */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/60 to-gray-900/40" />
+        {/* Additional vignette effect */}
+        <div className="absolute inset-0 bg-gradient-radial from-transparent via-black/20 to-black/50" />
       </div>
       
-      {/* Decorative Elements - Keep for extra depth */}
-      <div className="absolute top-20 right-10 w-72 h-72 bg-uk-blue/10 rounded-full blur-3xl" />
-      <div className="absolute bottom-20 left-10 w-96 h-96 bg-uk-blue-light/10 rounded-full blur-3xl" />
+      {/* Decorative light elements for depth */}
+      <div className="absolute top-20 right-10 w-72 h-72 bg-white/5 rounded-full blur-3xl" />
+      <div className="absolute bottom-20 left-10 w-96 h-96 bg-uk-blue/20 rounded-full blur-3xl" />
       
       <div className="container mx-auto px-4 pt-24 pb-16 relative z-10">
         <div className="max-w-6xl mx-auto">
           {/* Main Content */}
           <div className="text-center mb-16 animate-fade-in">
-            <div className="mb-10 inline-block">
+            {/* Logo with stronger shadow */}
+            <div className="mb-10 inline-block bg-white/10 backdrop-blur-md rounded-3xl p-6 shadow-2xl border border-white/20">
               <img 
                 src="/logobanner.JPG" 
                 alt="Kentucky Sports Chronicle" 
-                className="h-32 md:h-40 lg:h-48 w-auto object-contain mx-auto animate-slide-up drop-shadow-xl"
+                className="h-32 md:h-40 lg:h-48 w-auto object-contain mx-auto animate-slide-up"
+                style={{ filter: 'drop-shadow(0 10px 30px rgba(0, 0, 0, 0.5))' }}
               />
             </div>
             
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 text-gray-900 animate-slide-up">
-              Your Source for
-              <span className="block mt-2 bg-gradient-to-r from-uk-blue to-uk-blue-light bg-clip-text text-transparent">
+            {/* Title with white text and strong shadows */}
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 animate-slide-up">
+              <span className="text-white" style={{ 
+                textShadow: '0 4px 20px rgba(0, 0, 0, 0.8), 0 2px 8px rgba(0, 0, 0, 0.9), 0 0 40px rgba(0, 51, 160, 0.3)' 
+              }}>
+                Your Source for
+              </span>
+              <span className="block mt-3 text-white font-black" style={{ 
+                textShadow: '0 4px 20px rgba(0, 51, 160, 0.9), 0 2px 8px rgba(0, 0, 0, 0.9), 0 0 60px rgba(0, 81, 200, 0.6)',
+                WebkitTextStroke: '2px rgba(0, 51, 160, 0.3)'
+              }}>
                 Kentucky Sports
               </span>
             </h1>
             
-            <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto mb-12 leading-relaxed animate-slide-up">
-              Comprehensive coverage and expert commentary on University of Kentucky Athletics 
-              and the stories shaping sports across the Commonwealth.
-            </p>
+            {/* Description with white text and dark background */}
+            <div className="max-w-3xl mx-auto mb-12 animate-slide-up">
+              <p className="text-lg md:text-xl text-white font-medium leading-relaxed bg-black/40 backdrop-blur-sm rounded-2xl px-8 py-6 shadow-xl border border-white/10" style={{
+                textShadow: '0 2px 10px rgba(0, 0, 0, 0.8)'
+              }}>
+                Comprehensive coverage and expert commentary on University of Kentucky Athletics 
+                and the stories shaping sports across the Commonwealth.
+              </p>
+            </div>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center animate-slide-up">
               <button
                 onClick={() => scrollToSection('articles')}
-                className="group px-8 py-4 gradient-blue text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105 flex items-center space-x-2"
+                className="group px-8 py-4 gradient-blue text-white font-bold rounded-xl shadow-2xl hover:shadow-[0_20px_60px_rgba(0,51,160,0.5)] transition-all duration-300 hover:scale-110 flex items-center space-x-2 border-2 border-white/20"
               >
                 <span>Read Latest Stories</span>
                 <ArrowRight className="group-hover:translate-x-1 transition-transform" size={20} />
@@ -56,7 +71,7 @@ const Hero = ({ scrollToSection }) => {
               
               <button
                 onClick={() => scrollToSection('subscribe')}
-                className="px-8 py-4 bg-white text-uk-blue font-semibold rounded-xl border-2 border-uk-blue hover:bg-uk-blue hover:text-white transition-all duration-200 hover:scale-105 shadow-md"
+                className="px-8 py-4 bg-white text-uk-blue font-bold rounded-xl border-2 border-white hover:bg-white/90 hover:scale-110 transition-all duration-300 shadow-2xl hover:shadow-[0_20px_60px_rgba(255,255,255,0.4)]"
               >
                 Subscribe to Updates
               </button>
@@ -65,7 +80,7 @@ const Hero = ({ scrollToSection }) => {
           
           {/* Feature Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto animate-fade-in">
-            <div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2 border border-gray-100">
+            <div className="bg-white/95 backdrop-blur-md rounded-2xl p-6 shadow-2xl hover:shadow-[0_20px_60px_rgba(0,0,0,0.3)] transition-all duration-300 hover:-translate-y-2 border border-white/50">
               <div className="w-12 h-12 gradient-blue rounded-xl flex items-center justify-center mb-4">
                 <Trophy className="text-white" size={24} />
               </div>
@@ -75,7 +90,7 @@ const Hero = ({ scrollToSection }) => {
               </p>
             </div>
             
-            <div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2 border border-gray-100">
+            <div className="bg-white/95 backdrop-blur-md rounded-2xl p-6 shadow-2xl hover:shadow-[0_20px_60px_rgba(0,0,0,0.3)] transition-all duration-300 hover:-translate-y-2 border border-white/50">
               <div className="w-12 h-12 gradient-blue rounded-xl flex items-center justify-center mb-4">
                 <TrendingUp className="text-white" size={24} />
               </div>
@@ -85,7 +100,7 @@ const Hero = ({ scrollToSection }) => {
               </p>
             </div>
             
-            <div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2 border border-gray-100">
+            <div className="bg-white/95 backdrop-blur-md rounded-2xl p-6 shadow-2xl hover:shadow-[0_20px_60px_rgba(0,0,0,0.3)] transition-all duration-300 hover:-translate-y-2 border border-white/50">
               <div className="w-12 h-12 gradient-blue rounded-xl flex items-center justify-center mb-4">
                 <Users className="text-white" size={24} />
               </div>
