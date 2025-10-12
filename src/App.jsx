@@ -1,79 +1,39 @@
-import { useState, useEffect } from 'react'
-import Navigation from './components/Navigation'
-import Hero from './components/Hero'
-import ArticleFeed from './components/ArticleFeed'
-import About from './components/About'
-import Contact from './components/Contact'
-import Subscribe from './components/Subscribe'
-import Footer from './components/Footer'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { AuthProvider } from './contexts/AuthContext'
+import HomePage from './pages/HomePage'
+import ArticlePage from './pages/ArticlePage'
+import AdminLogin from './pages/AdminLogin'
+import AdminDashboard from './pages/AdminDashboard'
+import ArticleEditor from './pages/ArticleEditor'
+import ProtectedRoute from './components/ProtectedRoute'
 
 function App() {
-  const [activeSection, setActiveSection] = useState('home')
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const sections = ['home', 'articles', 'about', 'contact', 'subscribe']
-      const scrollPosition = window.scrollY + 100
-
-      for (const section of sections) {
-        const element = document.getElementById(section)
-        if (element) {
-          const { offsetTop, offsetHeight } = element
-          if (scrollPosition >= offsetTop && scrollPosition < offsetTop + offsetHeight) {
-            setActiveSection(section)
-            break
-          }
-        }
-      }
-    }
-
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
-
-  const scrollToSection = (sectionId) => {
-    const element = document.getElementById(sectionId)
-    if (element) {
-      const offset = 80
-      const elementPosition = element.offsetTop - offset
-      window.scrollTo({
-        top: elementPosition,
-        behavior: 'smooth'
-      })
-    }
-  }
-
   return (
-    <div className="min-h-screen bg-white">
-      <Navigation 
-        activeSection={activeSection} 
-        scrollToSection={scrollToSection}
-      />
-      
-      <main>
-        <section id="home">
-          <Hero scrollToSection={scrollToSection} />
-        </section>
-        
-        <section id="articles">
-          <ArticleFeed />
-        </section>
-        
-        <section id="about">
-          <About />
-        </section>
-        
-        <section id="contact">
-          <Contact />
-        </section>
-        
-        <section id="subscribe">
-          <Subscribe />
-        </section>
-      </main>
-      
-      <Footer scrollToSection={scrollToSection} />
-    </div>
+    <AuthProvider>
+      <Router>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/article/:slug" element={<ArticlePage />} />
+          <Route path="/admin/login" element={<AdminLogin />} />
+          <Route 
+            path="/admin/dashboard" 
+            element={
+              <ProtectedRoute>
+                <AdminDashboard />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/admin/article/:id" 
+            element={
+              <ProtectedRoute>
+                <ArticleEditor />
+              </ProtectedRoute>
+            } 
+          />
+        </Routes>
+      </Router>
+    </AuthProvider>
   )
 }
 
