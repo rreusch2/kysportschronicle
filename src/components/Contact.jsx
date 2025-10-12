@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import { Mail, MessageSquare, Send, CheckCircle } from 'lucide-react'
+import { Mail, MessageSquare, Send, CheckCircle, AlertCircle } from 'lucide-react'
+import { supabase } from '../lib/supabase'
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -9,16 +10,32 @@ const Contact = () => {
     message: ''
   })
   const [submitted, setSubmitted] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
+  const [error, setError] = useState('')
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    // In production, this would send to a backend API
-    console.log('Form submitted:', formData)
-    setSubmitted(true)
-    setTimeout(() => {
-      setSubmitted(false)
-      setFormData({ name: '', email: '', subject: '', message: '' })
-    }, 3000)
+    setSubmitting(true)
+    setError('')
+    
+    try {
+      const { error: submitError } = await supabase
+        .from('contacts')
+        .insert([formData])
+      
+      if (submitError) throw submitError
+      
+      setSubmitted(true)
+      setTimeout(() => {
+        setSubmitted(false)
+        setFormData({ name: '', email: '', subject: '', message: '' })
+      }, 5000)
+    } catch (err) {
+      console.error('Error submitting contact form:', err)
+      setError('Failed to send message. Please try again or email us directly.')
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   const handleChange = (e) => {
@@ -100,6 +117,13 @@ const Contact = () => {
             {/* Contact Form */}
             <div className="animate-slide-up" style={{ animationDelay: '200ms' }}>
               <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
+                {error && (
+                  <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-start gap-3">
+                    <AlertCircle className="text-red-600 flex-shrink-0 mt-0.5" size={20} />
+                    <p className="text-red-800 text-sm">{error}</p>
+                  </div>
+                )}
+                
                 {!submitted ? (
                   <form onSubmit={handleSubmit} className="space-y-6">
                     <div>
@@ -168,10 +192,20 @@ const Contact = () => {
 
                     <button
                       type="submit"
-                      className="w-full gradient-blue text-white font-semibold py-4 rounded-lg hover:shadow-xl transition-all duration-200 hover:scale-105 flex items-center justify-center gap-2"
+                      disabled={submitting}
+                      className="w-full gradient-blue text-white font-semibold py-4 rounded-lg hover:shadow-xl transition-all duration-200 hover:scale-105 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
                     >
-                      <span>Send Message</span>
-                      <Send size={18} />
+                      {submitting ? (
+                        <>
+                          <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                          <span>Sending...</span>
+                        </>
+                      ) : (
+                        <>
+                          <span>Send Message</span>
+                          <Send size={18} />
+                        </>
+                      )}
                     </button>
                   </form>
                 ) : (

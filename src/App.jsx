@@ -5,6 +5,7 @@ import ArticlePage from './pages/ArticlePage'
 import AdminLogin from './pages/AdminLogin'
 import AdminDashboard from './pages/AdminDashboard'
 import ArticleEditor from './pages/ArticleEditor'
+import AdminInbox from './pages/AdminInbox'
 import ProtectedRoute from './components/ProtectedRoute'
 
 function App() {
@@ -28,6 +29,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <ArticleEditor />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/admin/inbox" 
+            element={
+              <ProtectedRoute>
+                <AdminInbox />
               </ProtectedRoute>
             } 
           />

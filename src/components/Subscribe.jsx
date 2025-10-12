@@ -1,19 +1,43 @@
 import { useState } from 'react'
-import { Mail, Bell, CheckCircle, TrendingUp } from 'lucide-react'
+import { Mail, Bell, CheckCircle, TrendingUp, AlertCircle } from 'lucide-react'
+import { supabase } from '../lib/supabase'
 
 const Subscribe = () => {
   const [email, setEmail] = useState('')
   const [subscribed, setSubscribed] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
+  const [error, setError] = useState('')
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    // In production, this would send to a backend API or email service
-    console.log('Subscribed:', email)
-    setSubscribed(true)
-    setTimeout(() => {
-      setSubscribed(false)
-      setEmail('')
-    }, 3000)
+    setSubmitting(true)
+    setError('')
+    
+    try {
+      const { error: submitError } = await supabase
+        .from('subscribers')
+        .insert([{ email }])
+      
+      if (submitError) {
+        // Check if it's a duplicate email error
+        if (submitError.code === '23505') {
+          setError('This email is already subscribed!')
+        } else {
+          throw submitError
+        }
+      } else {
+        setSubscribed(true)
+        setTimeout(() => {
+          setSubscribed(false)
+          setEmail('')
+        }, 5000)
+      }
+    } catch (err) {
+      console.error('Error subscribing:', err)
+      setError('Failed to subscribe. Please try again later.')
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   return (
@@ -38,6 +62,13 @@ const Subscribe = () => {
               </p>
             </div>
 
+            {error && (
+              <div className="max-w-xl mx-auto mb-6 p-4 bg-white/20 backdrop-blur-sm border border-white/30 rounded-lg flex items-start gap-3">
+                <AlertCircle className="text-white flex-shrink-0 mt-0.5" size={20} />
+                <p className="text-white text-sm font-semibold">{error}</p>
+              </div>
+            )}
+            
             {!subscribed ? (
               <form onSubmit={handleSubmit} className="max-w-xl mx-auto">
                 <div className="flex flex-col sm:flex-row gap-3">
@@ -54,9 +85,17 @@ const Subscribe = () => {
                   </div>
                   <button
                     type="submit"
-                    className="px-8 py-4 bg-white text-uk-blue font-bold rounded-xl hover:bg-gray-100 transition-all duration-200 hover:scale-105 shadow-lg whitespace-nowrap"
+                    disabled={submitting}
+                    className="px-8 py-4 bg-white text-uk-blue font-bold rounded-xl hover:bg-gray-100 transition-all duration-200 hover:scale-105 shadow-lg whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2"
                   >
-                    Subscribe Now
+                    {submitting ? (
+                      <>
+                        <div className="w-5 h-5 border-2 border-uk-blue border-t-transparent rounded-full animate-spin" />
+                        <span>Subscribing...</span>
+                      </>
+                    ) : (
+                      'Subscribe Now'
+                    )}
                   </button>
                 </div>
                 <p className="text-white/80 text-sm text-center mt-4">

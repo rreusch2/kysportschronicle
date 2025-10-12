@@ -4,7 +4,7 @@ import { useAuth } from '../contexts/AuthContext'
 import { supabase } from '../lib/supabase'
 import { 
   PlusCircle, Edit, Trash2, Eye, EyeOff, LogOut, 
-  Search, Star, Calendar, BarChart
+  Search, Star, Calendar, BarChart, Mail
 } from 'lucide-react'
 import { format } from 'date-fns'
 
@@ -120,6 +120,13 @@ const AdminDashboard = () => {
               </div>
             </div>
             <div className="flex items-center gap-3">
+              <button
+                onClick={() => navigate('/admin/inbox')}
+                className="flex items-center gap-2 px-4 py-2 text-gray-600 hover:text-uk-blue font-semibold transition-colors"
+              >
+                <Mail size={18} />
+                Inbox
+              </button>
               <button
                 onClick={() => navigate('/')}
                 className="px-4 py-2 text-gray-600 hover:text-uk-blue font-semibold transition-colors"

@@ -107,26 +107,86 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- Sample data (optional - you can delete this after testing)
-INSERT INTO articles (
-    title,
-    slug,
-    excerpt,
-    content,
-    category,
-    is_published,
-    published_at,
-    read_time
-) VALUES (
+-- Contact form submissions table
+CREATE TABLE contacts (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  name TEXT NOT NULL,
+  email TEXT NOT NULL,
+  subject TEXT NOT NULL,
+  message TEXT NOT NULL,
+  is_read BOOLEAN DEFAULT false,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Newsletter subscriptions table
+CREATE TABLE subscribers (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  email TEXT UNIQUE NOT NULL,
+  subscribed_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  is_active BOOLEAN DEFAULT true
+);
+
+-- Indexes for performance
+CREATE INDEX idx_contacts_created_at ON contacts(created_at DESC);
+CREATE INDEX idx_contacts_is_read ON contacts(is_read);
+CREATE INDEX idx_subscribers_email ON subscribers(email);
+
+-- RLS Policies for contacts
+ALTER TABLE contacts ENABLE ROW LEVEL SECURITY;
+
+-- Anyone can insert (public contact form)
+CREATE POLICY "Anyone can submit contact form" ON contacts
+  FOR INSERT
+  TO public
+  WITH CHECK (true);
+
+-- Only authenticated users can read
+CREATE POLICY "Authenticated users can read contacts" ON contacts
+  FOR SELECT
+  TO authenticated
+  USING (true);
+
+-- Only authenticated users can update
+CREATE POLICY "Authenticated users can update contacts" ON contacts
+  FOR UPDATE
+  TO authenticated
+  USING (true);
+
+-- RLS Policies for subscribers
+ALTER TABLE subscribers ENABLE ROW LEVEL SECURITY;
+
+-- Anyone can insert (public subscription form)
+CREATE POLICY "Anyone can subscribe" ON subscribers
+  FOR INSERT
+  TO public
+  WITH CHECK (true);
+
+-- Only authenticated users can read
+CREATE POLICY "Authenticated users can read subscribers" ON subscribers
+  FOR SELECT
+  TO authenticated
+  USING (true);
+
+-- Only authenticated users can update/delete
+CREATE POLICY "Authenticated users can manage subscribers" ON subscribers
+  FOR ALL
+  TO authenticated
+  USING (true);
+
+-- Sample data
+INSERT INTO articles (title, slug, excerpt, content, category, author_name, is_published, is_featured, thumbnail_url)
+VALUES 
+  (
     'Welcome to Kentucky Sports Chronicle',
     'welcome-to-kentucky-sports-chronicle',
-    'We''re excited to launch Kentucky Sports Chronicle, your new source for comprehensive UK athletics coverage and commentary.',
-    '<h2>Welcome Big Blue Nation!</h2><p>We''re thrilled to launch Kentucky Sports Chronicle, your premier destination for in-depth coverage of University of Kentucky athletics and sports stories from across the Commonwealth.</p><p>Our mission is simple: provide you with the best analysis, breaking news, and insider perspectives on the teams and athletes you care about most.</p><h3>What to Expect</h3><p>From football to basketball, baseball to volleyball, we''ll be covering it all. Expect game recaps, recruiting updates, player profiles, and expert commentary that goes beyond the box score.</p><p>Thank you for being here from the beginning. Let''s go Cats!</p>',
+    'We''re excited to launch Kentucky Sports Chronicle, your premier source for UK Athletics coverage, analysis, and commentary.',
+    '<h2>A New Era of Kentucky Sports Coverage</h2><p>Welcome to Kentucky Sports Chronicle! We''re thrilled to bring you comprehensive coverage of University of Kentucky athletics and sports across the Commonwealth.</p><p>Our mission is simple: provide you with the most in-depth, accurate, and engaging sports content focused on what matters most to Big Blue Nation.</p><h2>What We Cover</h2><ul><li>Football - Game recaps, analysis, and recruiting</li><li>Basketball - Practice reports, player development, and more</li><li>All UK Sports - Baseball, volleyball, and beyond</li><li>Recruiting - The latest on commits and targets</li><li>Commentary - Hot takes and thoughtful analysis</li></ul><p>Thank you for joining us on this journey. Go Cats!</p>',
     'Announcement',
+    'Kentucky Sports Chronicle',
     true,
-    NOW(),
-    3
-);
+    true,
+    NULL
+  );
 
 -- Create a view for published articles with author info
 CREATE VIEW published_articles AS

@@ -11,7 +11,7 @@ const ArticleFeed = () => {
   const [selectedCategory, setSelectedCategory] = useState('All')
   const [displayCount, setDisplayCount] = useState(9)
   
-  const categories = ['All', 'Football', 'Basketball', 'Baseball', 'Volleyball', 'Recruiting', 'Analysis', 'Feature', 'Opinion']
+  const categories = ['All', 'Football', 'Basketball', 'Baseball', 'High School', 'Recruiting', 'Analysis', 'Feature', 'Opinion']
 
   useEffect(() => {
     fetchArticles()
