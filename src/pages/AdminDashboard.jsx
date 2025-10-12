@@ -299,26 +299,17 @@ const AdminDashboard = () => {
               />
             </div>
 
-            {/* Filter & Actions */}
-            <div className="flex flex-col sm:flex-row gap-3 justify-between">
+            {/* Filter */}
+            <div className="flex items-center">
               <select
                 value={filterCategory}
                 onChange={(e) => setFilterCategory(e.target.value)}
-                className="px-4 py-2.5 md:py-3 border-2 border-gray-200 rounded-xl focus:border-uk-blue focus:outline-none font-semibold text-sm md:text-base bg-white"
+                className="px-4 py-2.5 md:py-3 border-2 border-gray-200 rounded-xl focus:border-uk-blue focus:outline-none font-semibold text-sm md:text-base bg-white w-full sm:w-auto"
               >
                 {categories.map(cat => (
                   <option key={cat} value={cat}>{cat}</option>
                 ))}
               </select>
-
-              <button
-                onClick={() => navigate('/admin/article/new')}
-                className="gradient-blue text-white px-6 py-2.5 md:py-3 rounded-xl font-semibold hover:shadow-lg transition-all flex items-center justify-center gap-2 text-sm md:text-base"
-              >
-                <PlusCircle size={20} />
-                <span className="hidden sm:inline">New Article</span>
-                <span className="sm:hidden">Create</span>
-              </button>
             </div>
           </div>
 
