@@ -2,13 +2,24 @@ import { ArrowRight, Trophy, TrendingUp, Users } from 'lucide-react'
 
 const Hero = ({ scrollToSection }) => {
   return (
-    <div className="relative min-h-screen flex items-center overflow-hidden">
-      {/* Gradient Background */}
-      <div className="absolute inset-0 gradient-blue-radial opacity-5" />
+    <div className="relative min-h-screen flex items-center overflow-hidden bg-gradient-to-b from-gray-100 to-white">
+      {/* Background Image - Add your UK Sports graphic here! */}
+      <div 
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-opacity duration-300" 
+        style={{ 
+          backgroundImage: 'url(/hero-background.jpg)',
+          backgroundAttachment: 'scroll' // Change to 'fixed' for parallax effect
+        }}
+      >
+        {/* Dark overlay for text readability - Adjust opacity if needed */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-white/95" />
+        {/* UK Blue tint overlay - Remove this line if image has enough blue */}
+        <div className="absolute inset-0 bg-uk-blue/5" />
+      </div>
       
-      {/* Decorative Elements */}
-      <div className="absolute top-20 right-10 w-72 h-72 bg-uk-blue/5 rounded-full blur-3xl" />
-      <div className="absolute bottom-20 left-10 w-96 h-96 bg-uk-blue-light/5 rounded-full blur-3xl" />
+      {/* Decorative Elements - Keep for extra depth */}
+      <div className="absolute top-20 right-10 w-72 h-72 bg-uk-blue/10 rounded-full blur-3xl" />
+      <div className="absolute bottom-20 left-10 w-96 h-96 bg-uk-blue-light/10 rounded-full blur-3xl" />
       
       <div className="container mx-auto px-4 pt-24 pb-16 relative z-10">
         <div className="max-w-6xl mx-auto">

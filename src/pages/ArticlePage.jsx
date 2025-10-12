@@ -83,53 +83,53 @@ const ArticlePage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 via-white to-gray-50">
       {/* Header with Navigation */}
-      <div className="bg-white border-b border-gray-200 sticky top-0 z-10">
+      <div className="bg-white/80 backdrop-blur-md border-b border-gray-200 sticky top-0 z-10 shadow-sm">
         <div className="container mx-auto px-4 py-4">
           <button
             onClick={() => navigate('/')}
-            className="flex items-center gap-2 text-gray-600 hover:text-uk-blue transition-colors font-semibold"
+            className="flex items-center gap-2 text-gray-600 hover:text-uk-blue transition-all font-semibold hover:gap-3 group"
           >
-            <ArrowLeft size={20} />
+            <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
             Back to Home
           </button>
         </div>
       </div>
 
       {/* Article Header */}
-      <article className="max-w-4xl mx-auto px-4 py-12">
-        <header className="mb-8">
+      <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <header className="mb-10 animate-fade-in">
           {/* Category Badge */}
-          <div className="mb-4">
-            <span className="px-4 py-2 bg-uk-blue/10 text-uk-blue rounded-full font-semibold text-sm">
+          <div className="mb-6">
+            <span className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-uk-blue to-uk-blue-light text-white rounded-full font-bold text-sm shadow-md hover:shadow-lg transition-shadow">
               {article.category}
             </span>
           </div>
 
           {/* Title */}
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 leading-tight">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-8 leading-tight animate-slide-up">
             {article.title}
           </h1>
 
           {/* Meta Info */}
-          <div className="flex flex-wrap items-center gap-6 text-gray-600">
-            <div className="flex items-center gap-2">
-              <User size={18} />
-              <span className="font-semibold">{article.author_name}</span>
+          <div className="flex flex-wrap items-center gap-4 md:gap-6 text-gray-600 animate-slide-up">
+            <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-sm border border-gray-100">
+              <User size={18} className="text-uk-blue" />
+              <span className="font-semibold text-gray-900">{article.author_name}</span>
             </div>
-            <div className="flex items-center gap-2">
-              <Calendar size={18} />
+            <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-sm border border-gray-100">
+              <Calendar size={18} className="text-uk-blue" />
               <span>
                 {format(new Date(article.published_at || article.created_at), 'MMMM d, yyyy')}
               </span>
             </div>
-            <div className="flex items-center gap-2">
-              <Clock size={18} />
+            <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-sm border border-gray-100">
+              <Clock size={18} className="text-uk-blue" />
               <span>{article.read_time} min read</span>
             </div>
-            <div className="flex items-center gap-2">
-              <Eye size={18} />
+            <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-sm border border-gray-100">
+              <Eye size={18} className="text-uk-blue" />
               <span>{article.views || 0} views</span>
             </div>
           </div>
@@ -137,74 +137,80 @@ const ArticlePage = () => {
 
         {/* Featured Image */}
         {article.thumbnail_url && (
-          <div className="mb-8">
-            <img
-              src={article.thumbnail_url}
-              alt={article.title}
-              className="w-full h-auto rounded-2xl shadow-lg"
-            />
+          <div className="mb-10 animate-slide-up" style={{ animationDelay: '100ms' }}>
+            <div className="relative overflow-hidden rounded-2xl shadow-2xl group">
+              <img
+                src={article.thumbnail_url}
+                alt={article.title}
+                className="w-full h-auto transition-transform duration-500 group-hover:scale-105"
+              />
+              <div className="absolute inset-0 ring-1 ring-inset ring-gray-900/10 rounded-2xl" />
+            </div>
           </div>
         )}
 
         {/* Excerpt */}
         {article.excerpt && (
-          <div className="mb-8 p-6 bg-gray-50 rounded-xl border-l-4 border-uk-blue">
-            <p className="text-lg text-gray-700 italic leading-relaxed">
-              {article.excerpt}
-            </p>
+          <div className="mb-10 p-8 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl border-l-4 border-uk-blue shadow-md animate-slide-up" style={{ animationDelay: '200ms' }}>
+            <div className="flex items-start gap-4">
+              <div className="flex-shrink-0 w-1 h-full bg-uk-blue rounded-full" />
+              <div>
+                <p className="text-sm font-bold text-uk-blue uppercase tracking-wide mb-2">Article Summary</p>
+                <p className="text-xl text-gray-800 leading-relaxed font-medium">
+                  {article.excerpt}
+                </p>
+              </div>
+            </div>
           </div>
         )}
 
         {/* Content */}
-        <div 
-          className="prose prose-lg max-w-none
-            prose-headings:font-bold prose-headings:text-gray-900
-            prose-h1:text-3xl prose-h2:text-2xl prose-h3:text-xl
-            prose-p:text-gray-700 prose-p:leading-relaxed
-            prose-a:text-uk-blue prose-a:no-underline hover:prose-a:underline
-            prose-strong:text-gray-900
-            prose-img:rounded-xl prose-img:shadow-md
-            prose-blockquote:border-l-4 prose-blockquote:border-uk-blue prose-blockquote:bg-gray-50 prose-blockquote:py-2 prose-blockquote:px-6
-            prose-ul:list-disc prose-ol:list-decimal
-            prose-li:text-gray-700"
-          dangerouslySetInnerHTML={{ __html: article.content }}
-        />
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 md:p-12 animate-slide-up" style={{ animationDelay: '300ms' }}>
+          <div 
+            className="article-content"
+            dangerouslySetInnerHTML={{ __html: article.content }}
+          />
+        </div>
       </article>
 
       {/* Related Articles */}
       {relatedArticles.length > 0 && (
-        <div className="bg-gray-50 py-16">
+        <div className="bg-gradient-to-br from-gray-100 to-gray-50 py-16 mt-16">
           <div className="container mx-auto px-4">
-            <h2 className="text-3xl font-bold text-gray-900 mb-8">Related Articles</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {relatedArticles.map((related) => (
-                <div
-                  key={related.id}
-                  onClick={() => navigate(`/article/${related.slug}`)}
-                  className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all cursor-pointer overflow-hidden border border-gray-100 hover:-translate-y-1"
-                >
-                  {related.thumbnail_url && (
-                    <div className="h-48 overflow-hidden">
-                      <img
-                        src={related.thumbnail_url}
-                        alt={related.title}
-                        className="w-full h-full object-cover"
-                      />
+            <div className="max-w-6xl mx-auto">
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">Related Articles</h2>
+              <p className="text-gray-600 mb-8">Continue reading more stories like this</p>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {relatedArticles.map((related) => (
+                  <div
+                    key={related.id}
+                    onClick={() => navigate(`/article/${related.slug}`)}
+                    className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer overflow-hidden border border-gray-200 hover:-translate-y-2 group"
+                  >
+                    {related.thumbnail_url && (
+                      <div className="h-48 overflow-hidden relative">
+                        <img
+                          src={related.thumbnail_url}
+                          alt={related.title}
+                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+                      </div>
+                    )}
+                    <div className="p-6">
+                      <span className="inline-block px-3 py-1 bg-uk-blue/10 text-uk-blue rounded-full text-xs font-bold">
+                        {related.category}
+                      </span>
+                      <h3 className="text-xl font-bold text-gray-900 mt-3 mb-2 line-clamp-2 group-hover:text-uk-blue transition-colors">
+                        {related.title}
+                      </h3>
+                      <p className="text-gray-600 text-sm line-clamp-3 leading-relaxed">
+                        {related.excerpt}
+                      </p>
                     </div>
-                  )}
-                  <div className="p-6">
-                    <span className="px-3 py-1 bg-uk-blue/10 text-uk-blue rounded-full text-xs font-semibold">
-                      {related.category}
-                    </span>
-                    <h3 className="text-xl font-bold text-gray-900 mt-3 mb-2 line-clamp-2">
-                      {related.title}
-                    </h3>
-                    <p className="text-gray-600 text-sm line-clamp-2">
-                      {related.excerpt}
-                    </p>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </div>
         </div>
