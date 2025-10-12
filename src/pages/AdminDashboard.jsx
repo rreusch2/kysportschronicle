@@ -8,6 +8,8 @@ import {
   TrendingUp, FileText, Clock, ExternalLink
 } from 'lucide-react'
 import { format } from 'date-fns'
+import { motion } from 'framer-motion'
+import { useAutoAnimate } from '@formkit/auto-animate/react'
 
 const AdminDashboard = () => {
   const { user, signOut } = useAuth()
@@ -18,6 +20,9 @@ const AdminDashboard = () => {
   const [filterCategory, setFilterCategory] = useState('All')
   const [stats, setStats] = useState({ total: 0, published: 0, drafts: 0, views: 0 })
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  
+  // Auto Animate for smooth list transitions
+  const [articlesListRef] = useAutoAnimate()
 
   useEffect(() => {
     fetchArticles()
@@ -354,7 +359,7 @@ const AdminDashboard = () => {
             )}
           </div>
         ) : (
-          <div className="space-y-4 md:space-y-6">
+          <div ref={articlesListRef} className="space-y-4 md:space-y-6">
             {filteredArticles.map((article, index) => (
               <div
                 key={article.id}

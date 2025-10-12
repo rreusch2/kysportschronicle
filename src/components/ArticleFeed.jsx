@@ -1,8 +1,10 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Clock, ArrowRight, Calendar, User } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import { format } from 'date-fns'
+import { motion } from 'framer-motion'
+import { useAutoAnimate } from '@formkit/auto-animate/react'
 
 const ArticleFeed = () => {
   const navigate = useNavigate()
@@ -10,6 +12,10 @@ const ArticleFeed = () => {
   const [loading, setLoading] = useState(true)
   const [selectedCategory, setSelectedCategory] = useState('All')
   const [displayCount, setDisplayCount] = useState(9)
+  
+  // Auto Animate refs for smooth list animations
+  const [articlesGridRef] = useAutoAnimate()
+  const [categoriesRef] = useAutoAnimate()
   
   const categories = ['All', 'Football', 'Basketball', 'Baseball', 'High School', 'Recruiting', 'Analysis', 'Feature', 'Opinion']
 
@@ -58,7 +64,13 @@ const ArticleFeed = () => {
         </div>
 
         {/* Category Filter */}
-        <div className="flex flex-wrap justify-center gap-3 mb-12 animate-slide-up">
+        <motion.div 
+          ref={categoriesRef}
+          className="flex flex-wrap justify-center gap-3 mb-12"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+        >
           {categories.map((category) => (
             <button
               key={category}
@@ -72,7 +84,7 @@ const ArticleFeed = () => {
               {category}
             </button>
           ))}
-        </div>
+        </motion.div>
 
         {/* Loading State */}
         {loading && (
@@ -138,13 +150,17 @@ const ArticleFeed = () => {
 
         {/* Regular Articles Grid */}
         {!loading && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div ref={articlesGridRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {regularArticles.map((article, index) => (
-              <article
+              <motion.article
                 key={article.id}
                 onClick={() => navigate(`/article/${article.slug}`)}
-                className="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border border-gray-100 group animate-fade-in cursor-pointer"
-                style={{ animationDelay: `${index * 100}ms` }}
+                className="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border border-gray-100 group cursor-pointer"
+                initial={{ opacity: 0, y: 50 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                whileHover={{ scale: 1.03, transition: { duration: 0.2 } }}
+                whileTap={{ scale: 0.98 }}
               >
                 {article.thumbnail_url ? (
                   <div className="h-48 overflow-hidden">
@@ -197,7 +213,7 @@ const ArticleFeed = () => {
                   <ArrowRight size={16} className="group-hover/btn:translate-x-1 transition-transform" />
                 </div>
               </div>
-            </article>
+            </motion.article>
             ))}
           </div>
         )}
