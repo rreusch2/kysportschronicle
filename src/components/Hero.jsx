@@ -14,11 +14,11 @@ const Hero = ({ scrollToSection }) => {
         <div className="max-w-6xl mx-auto">
           {/* Main Content */}
           <div className="text-center mb-16 animate-fade-in">
-            <div className="mb-8 inline-block">
+            <div className="mb-10 inline-block">
               <img 
                 src="/logobanner.JPG" 
                 alt="Kentucky Sports Chronicle" 
-                className="h-24 md:h-32 object-contain mx-auto animate-slide-up"
+                className="h-32 md:h-40 lg:h-48 w-auto object-contain mx-auto animate-slide-up drop-shadow-xl"
               />
             </div>
             
