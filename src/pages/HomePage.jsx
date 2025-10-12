@@ -7,12 +7,9 @@ import About from '../components/About'
 import Contact from '../components/Contact'
 import Subscribe from '../components/Subscribe'
 import Footer from '../components/Footer'
-import { useAuth } from '../contexts/AuthContext'
-import { Lock } from 'lucide-react'
 
 const HomePage = () => {
   const navigate = useNavigate()
-  const { user } = useAuth()
   const [activeSection, setActiveSection] = useState('home')
 
   useEffect(() => {
@@ -54,25 +51,6 @@ const HomePage = () => {
         activeSection={activeSection} 
         scrollToSection={scrollToSection}
       />
-      
-      {/* Admin Access Button (floating) */}
-      {user ? (
-        <button
-          onClick={() => navigate('/admin/dashboard')}
-          className="fixed bottom-8 right-8 z-50 gradient-blue text-white px-6 py-3 rounded-full shadow-2xl hover:shadow-3xl transition-all duration-200 hover:scale-110 flex items-center gap-2 font-semibold"
-        >
-          <Lock size={18} />
-          Admin Dashboard
-        </button>
-      ) : (
-        <button
-          onClick={() => navigate('/admin/login')}
-          className="fixed bottom-8 right-8 z-50 bg-gray-800 text-white px-6 py-3 rounded-full shadow-2xl hover:shadow-3xl transition-all duration-200 hover:scale-110 flex items-center gap-2 font-semibold"
-        >
-          <Lock size={18} />
-          Admin
-        </button>
-      )}
       
       <main>
         <section id="home">

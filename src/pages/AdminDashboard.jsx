@@ -4,7 +4,8 @@ import { useAuth } from '../contexts/AuthContext'
 import { supabase } from '../lib/supabase'
 import { 
   PlusCircle, Edit, Trash2, Eye, EyeOff, LogOut, 
-  Search, Star, Calendar, BarChart, Mail
+  Search, Star, Calendar, BarChart, Mail, Menu, X,
+  TrendingUp, FileText, Clock, ExternalLink
 } from 'lucide-react'
 import { format } from 'date-fns'
 
@@ -16,6 +17,7 @@ const AdminDashboard = () => {
   const [searchTerm, setSearchTerm] = useState('')
   const [filterCategory, setFilterCategory] = useState('All')
   const [stats, setStats] = useState({ total: 0, published: 0, drafts: 0, views: 0 })
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   useEffect(() => {
     fetchArticles()
@@ -107,92 +109,177 @@ const AdminDashboard = () => {
     )
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 py-4">
+      <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-40">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <img src="/logoround.JPG" alt="KSC" className="h-12 w-12" />
-              <div>
-                <h1 className="text-2xl font-bold text-gray-900">Admin Dashboard</h1>
-                <p className="text-sm text-gray-600">{user?.email}</p>
+            {/* Logo & Title */}
+            <div className="flex items-center gap-3 md:gap-4">
+              <img 
+                src="/logoround.JPG" 
+                alt="KSC" 
+                className="h-10 w-10 md:h-12 md:w-12 rounded-full shadow-md" 
+              />
+              <div className="hidden sm:block">
+                <h1 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-uk-blue to-uk-blue-light bg-clip-text text-transparent">
+                  Admin Dashboard
+                </h1>
+                <p className="text-xs md:text-sm text-gray-600 truncate max-w-[200px]">{user?.email}</p>
+              </div>
+              <div className="sm:hidden">
+                <h1 className="text-lg font-bold text-gray-900">Dashboard</h1>
               </div>
             </div>
-            <div className="flex items-center gap-3">
+
+            {/* Desktop Navigation */}
+            <div className="hidden lg:flex items-center gap-3">
               <button
                 onClick={() => navigate('/admin/inbox')}
-                className="flex items-center gap-2 px-4 py-2 text-gray-600 hover:text-uk-blue font-semibold transition-colors"
+                className="flex items-center gap-2 px-4 py-2 text-gray-600 hover:text-uk-blue font-semibold transition-colors rounded-lg hover:bg-gray-50"
               >
                 <Mail size={18} />
-                Inbox
+                <span>Inbox</span>
               </button>
               <button
                 onClick={() => navigate('/')}
-                className="px-4 py-2 text-gray-600 hover:text-uk-blue font-semibold transition-colors"
+                className="flex items-center gap-2 px-4 py-2 text-gray-600 hover:text-uk-blue font-semibold transition-colors rounded-lg hover:bg-gray-50"
               >
-                View Site
+                <ExternalLink size={18} />
+                <span>View Site</span>
               </button>
               <button
                 onClick={handleSignOut}
-                className="flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg font-semibold transition-colors"
+                className="flex items-center gap-2 px-4 py-2 gradient-blue text-white rounded-lg font-semibold hover:shadow-lg transition-all"
               >
                 <LogOut size={18} />
-                Sign Out
+                <span>Sign Out</span>
               </button>
             </div>
+
+            {/* Mobile Menu Button */}
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="lg:hidden p-2 text-gray-600 hover:text-uk-blue transition-colors"
+            >
+              {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
           </div>
+
+          {/* Mobile Menu */}
+          {mobileMenuOpen && (
+            <div className="lg:hidden mt-4 pt-4 border-t border-gray-200 space-y-2 animate-fade-in">
+              <button
+                onClick={() => {
+                  navigate('/admin/inbox')
+                  setMobileMenuOpen(false)
+                }}
+                className="w-full flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors font-medium"
+              >
+                <Mail size={20} />
+                <span>Inbox</span>
+              </button>
+              <button
+                onClick={() => {
+                  navigate('/')
+                  setMobileMenuOpen(false)
+                }}
+                className="w-full flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors font-medium"
+              >
+                <ExternalLink size={20} />
+                <span>View Site</span>
+              </button>
+              <button
+                onClick={handleSignOut}
+                className="w-full flex items-center gap-3 px-4 py-3 gradient-blue text-white rounded-lg font-semibold hover:shadow-lg transition-all"
+              >
+                <LogOut size={20} />
+                <span>Sign Out</span>
+              </button>
+            </div>
+          )}
         </div>
       </header>
 
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        {/* Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-gray-600 text-sm font-semibold">Total Articles</p>
-                <p className="text-3xl font-bold text-gray-900 mt-1">{stats.total}</p>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8">
+        {/* Welcome Banner */}
+        <div className="gradient-blue rounded-2xl p-6 md:p-8 mb-6 md:mb-8 text-white shadow-xl animate-fade-in">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div>
+              <h2 className="text-2xl md:text-3xl font-bold mb-2">
+                Welcome back! 👋
+              </h2>
+              <p className="text-blue-100 text-sm md:text-base">
+                Here's what's happening with your content today
+              </p>
+            </div>
+            <button
+              onClick={() => navigate('/admin/article/new')}
+              className="bg-white text-uk-blue px-6 py-3 rounded-xl font-bold hover:bg-gray-100 transition-all shadow-lg hover:shadow-xl hover:scale-105 flex items-center justify-center gap-2 w-full md:w-auto"
+            >
+              <PlusCircle size={20} />
+              <span>Create Article</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Stats Grid */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-6 md:mb-8">
+          {/* Total Articles */}
+          <div className="bg-white rounded-xl md:rounded-2xl p-4 md:p-6 shadow-sm border border-gray-100 hover:shadow-md transition-all animate-slide-up">
+            <div className="flex items-center justify-between mb-3">
+              <div className="w-10 h-10 md:w-12 md:h-12 gradient-blue rounded-xl flex items-center justify-center">
+                <FileText className="text-white" size={20} />
               </div>
-              <div className="w-12 h-12 bg-uk-blue/10 rounded-lg flex items-center justify-center">
-                <BarChart className="text-uk-blue" size={24} />
-              </div>
+            </div>
+            <p className="text-gray-600 text-xs md:text-sm font-semibold mb-1">Total Articles</p>
+            <p className="text-2xl md:text-3xl font-bold text-gray-900">{stats.total}</p>
+            <div className="flex items-center gap-1 mt-2 text-xs text-gray-500">
+              <TrendingUp size={12} />
+              <span>All time</span>
             </div>
           </div>
 
-          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-gray-600 text-sm font-semibold">Published</p>
-                <p className="text-3xl font-bold text-green-600 mt-1">{stats.published}</p>
+          {/* Published */}
+          <div className="bg-white rounded-xl md:rounded-2xl p-4 md:p-6 shadow-sm border border-gray-100 hover:shadow-md transition-all animate-slide-up" style={{ animationDelay: '100ms' }}>
+            <div className="flex items-center justify-between mb-3">
+              <div className="w-10 h-10 md:w-12 md:h-12 bg-green-100 rounded-xl flex items-center justify-center">
+                <Eye className="text-green-600" size={20} />
               </div>
-              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                <Eye className="text-green-600" size={24} />
-              </div>
+            </div>
+            <p className="text-gray-600 text-xs md:text-sm font-semibold mb-1">Published</p>
+            <p className="text-2xl md:text-3xl font-bold text-green-600">{stats.published}</p>
+            <div className="flex items-center gap-1 mt-2 text-xs text-green-600 font-medium">
+              <span>Live now</span>
             </div>
           </div>
 
-          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-gray-600 text-sm font-semibold">Drafts</p>
-                <p className="text-3xl font-bold text-orange-600 mt-1">{stats.drafts}</p>
+          {/* Drafts */}
+          <div className="bg-white rounded-xl md:rounded-2xl p-4 md:p-6 shadow-sm border border-gray-100 hover:shadow-md transition-all animate-slide-up" style={{ animationDelay: '200ms' }}>
+            <div className="flex items-center justify-between mb-3">
+              <div className="w-10 h-10 md:w-12 md:h-12 bg-orange-100 rounded-xl flex items-center justify-center">
+                <Clock className="text-orange-600" size={20} />
               </div>
-              <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
-                <EyeOff className="text-orange-600" size={24} />
-              </div>
+            </div>
+            <p className="text-gray-600 text-xs md:text-sm font-semibold mb-1">Drafts</p>
+            <p className="text-2xl md:text-3xl font-bold text-orange-600">{stats.drafts}</p>
+            <div className="flex items-center gap-1 mt-2 text-xs text-orange-600 font-medium">
+              <span>In progress</span>
             </div>
           </div>
 
-          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-gray-600 text-sm font-semibold">Total Views</p>
-                <p className="text-3xl font-bold text-purple-600 mt-1">{stats.views}</p>
+          {/* Total Views */}
+          <div className="bg-white rounded-xl md:rounded-2xl p-4 md:p-6 shadow-sm border border-gray-100 hover:shadow-md transition-all animate-slide-up" style={{ animationDelay: '300ms' }}>
+            <div className="flex items-center justify-between mb-3">
+              <div className="w-10 h-10 md:w-12 md:h-12 bg-purple-100 rounded-xl flex items-center justify-center">
+                <BarChart className="text-purple-600" size={20} />
               </div>
-              <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-                <Star className="text-purple-600" size={24} />
-              </div>
+            </div>
+            <p className="text-gray-600 text-xs md:text-sm font-semibold mb-1">Total Views</p>
+            <p className="text-2xl md:text-3xl font-bold text-purple-600">{stats.views.toLocaleString()}</p>
+            <div className="flex items-center gap-1 mt-2 text-xs text-purple-600 font-medium">
+              <TrendingUp size={12} />
+              <span>Engagement</span>
             </div>
           </div>
         </div>

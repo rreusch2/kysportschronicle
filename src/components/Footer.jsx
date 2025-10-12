@@ -1,7 +1,9 @@
 import { Facebook, Mail, Heart } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 
 const Footer = ({ scrollToSection }) => {
   const currentYear = new Date().getFullYear()
+  const navigate = useNavigate()
 
   return (
     <footer className="bg-gray-900 text-white pt-16 pb-8">
@@ -9,21 +11,25 @@ const Footer = ({ scrollToSection }) => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
           {/* Brand */}
           <div className="md:col-span-2">
-            <div className="flex items-center space-x-3 mb-4">
+            <button 
+              onClick={() => navigate('/admin/login')}
+              className="flex items-center space-x-3 mb-4 group cursor-pointer"
+              aria-label="Admin Access"
+            >
               <img 
                 src="/logoround.JPG" 
                 alt="Kentucky Sports Chronicle" 
-                className="h-12 w-12 object-contain"
+                className="h-12 w-12 object-contain transition-transform group-hover:scale-110"
               />
               <div className="flex flex-col">
-                <span className="font-bold text-xl leading-tight">
+                <span className="font-bold text-xl leading-tight group-hover:text-uk-blue transition-colors">
                   Kentucky Sports
                 </span>
                 <span className="text-gray-400 text-sm leading-tight">
                   Chronicle
                 </span>
               </div>
-            </div>
+            </button>
             <p className="text-gray-400 mb-4 max-w-md">
               Kentucky's source for coverage and commentary of UK athletics and the 
               stories shaping sports across the Commonwealth.
