@@ -3,6 +3,8 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import { Calendar, Clock, User, ArrowLeft, Eye } from 'lucide-react'
 import { format } from 'date-fns'
+import MetaTags from '../components/MetaTags'
+import ShareButton from '../components/ShareButton'
 
 const ArticlePage = () => {
   const { slug } = useParams()
@@ -82,11 +84,25 @@ const ArticlePage = () => {
     )
   }
 
+  // Get the full article URL
+  const articleUrl = `${window.location.origin}/article/${article.slug}`
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 via-white to-gray-50">
+      {/* Dynamic Meta Tags for SEO and Social Sharing */}
+      <MetaTags
+        title={article.title}
+        description={article.excerpt}
+        image={article.thumbnail_url}
+        url={articleUrl}
+        author={article.author_name}
+        publishedTime={article.published_at}
+        keywords={[article.category, 'Kentucky', 'UK Athletics', 'Sports']}
+      />
+
       {/* Header with Navigation */}
       <div className="bg-white/80 backdrop-blur-md border-b border-gray-200 sticky top-0 z-10 shadow-sm">
-        <div className="container mx-auto px-4 py-4">
+        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <button
             onClick={() => navigate('/')}
             className="flex items-center gap-2 text-gray-600 hover:text-uk-blue transition-all font-semibold hover:gap-3 group"
@@ -94,6 +110,13 @@ const ArticlePage = () => {
             <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
             Back to Home
           </button>
+          
+          {/* Share Button in Header */}
+          <ShareButton 
+            url={articleUrl}
+            title={article.title}
+            excerpt={article.excerpt}
+          />
         </div>
       </div>
 
@@ -170,6 +193,21 @@ const ArticlePage = () => {
             className="article-content"
             dangerouslySetInnerHTML={{ __html: article.content }}
           />
+        </div>
+
+        {/* Share Section */}
+        <div className="mt-12 p-8 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl border border-blue-100 shadow-md animate-slide-up" style={{ animationDelay: '400ms' }}>
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div>
+              <h3 className="text-xl font-bold text-gray-900 mb-1">Enjoyed this article?</h3>
+              <p className="text-gray-600">Share it with fellow Big Blue fans!</p>
+            </div>
+            <ShareButton 
+              url={articleUrl}
+              title={article.title}
+              excerpt={article.excerpt}
+            />
+          </div>
         </div>
       </article>
 

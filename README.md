@@ -12,6 +12,9 @@ A stunning, modern web application with a full-featured CMS for Kentucky's premi
 - **Responsive Design** - Fully optimized for desktop, tablet, and mobile devices
 - **Dynamic Article Feed** - Real-time articles from Supabase with category filtering
 - **Individual Article Pages** - Full article view with SEO optimization
+- **Social Sharing** - One-click sharing to Facebook, Twitter, Email, and link copying
+- **Dynamic Meta Tags** - Open Graph and Twitter Cards for rich social previews
+- **SEO Optimized** - Comprehensive meta tags, structured data, and semantic HTML
 - **Email Subscription** - Integrated newsletter subscription system
 - **Contact Form** - Easy-to-use contact form for reader engagement
 - **Social Integration** - Facebook and email links for community building
@@ -169,6 +172,7 @@ lacon/
 
 - **[SUPABASE_SETUP.md](./SUPABASE_SETUP.md)** - Complete Supabase setup guide
 - **[CMS_GUIDE.md](./CMS_GUIDE.md)** - User guide for content creators
+- **[DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md)** - Deployment guide and 404 fix
 - **[README.md](./README.md)** - This file (developer documentation)
 
 ## 👥 For Content Creators
@@ -227,12 +231,23 @@ The codebase is modular and easy to extend:
 
 ## 🚀 Deployment
 
-Deploy to any modern hosting platform:
+Deploy to any modern hosting platform. **See [DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md) for detailed instructions.**
 
-- **Vercel** - `vercel` (Recommended)
-- **Netlify** - Drag and drop `dist` folder
+Quick deploy options:
+
+- **Netlify** - Auto-deploy from Git (Recommended)
+- **Vercel** - `vercel` command or Git integration
 - **GitHub Pages** - Use `gh-pages` package
-- **AWS S3** - Static website hosting
+- **AWS S3 + CloudFront** - Static website hosting
+
+### Important: SPA Routing
+
+Configuration files included to fix 404 errors on article links:
+- ✅ `netlify.toml` - For Netlify
+- ✅ `vercel.json` - For Vercel
+- ✅ `public/_redirects` - For other platforms
+
+These ensure shared article links work correctly!
 
 ## 📝 Future Enhancements
 
